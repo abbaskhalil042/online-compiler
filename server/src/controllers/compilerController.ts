@@ -1,8 +1,13 @@
 import { Request, Response } from "express";
 import { Code } from "../models/Code";
+import { fullCodeType } from "../types/fullCodeType";
 
 export const saveCode = async (req: Request, res: Response) => {
-  const { fullCode } = req.body;
+  const fullCode: fullCodeType = req.body;
+
+  if (!fullCode.html || !fullCode.css || !fullCode.javascript) {
+    return res.status(400).send({ message: "Code not found!" });
+  }
 
   try {
     const newCode = await Code.create({
@@ -15,12 +20,11 @@ export const saveCode = async (req: Request, res: Response) => {
   }
 };
 
-
-//&load code 
+//&load code
 
 export const loadCode = async (req: Request, res: Response) => {
   const { urlId } = req.body;
-  // console.log("url not fount",urlId)//^undefined 
+  // console.log("url not fount",urlId)//^undefined
 
   try {
     const existingCode = await Code.findById(urlId);
