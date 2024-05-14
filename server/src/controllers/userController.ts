@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user";
 import { saveCode } from "./compilerController";
+import { AuthRequest } from "../middlewares/verifyToken";
 
 
 // Controller function for user signup
@@ -134,3 +135,31 @@ export const logout = async (req: Request, res: Response) => {
     res.status(500).send({ message: "Internal server error" });
   }
 };
+
+
+//&userDetails
+
+export const userDetails=async (req:AuthRequest,res:Response)=>{
+  try {
+
+    const userId=req._id
+    const existingUser=await User.findById(userId);
+
+    if(!existingUser){
+      return res.status(404).send({message:"Cannot find the user "})
+    }
+
+    return res.status(200).send({
+      username: existingUser.username,
+      picture: existingUser.picture,
+      email: existingUser.email,
+      savedCodes: existingUser.saveCode,
+    })
+
+    console.log(userId)
+    return res.status(200).send({userId})
+  } catch (error) {
+    return res.status(500).send({message:"Cannot fetch user details !"})
+    
+  }
+}
