@@ -4,6 +4,7 @@ import { fullCodeType } from "../types/fullCodeType";
 
 export const saveCode = async (req: Request, res: Response) => {
   const fullCode: fullCodeType = req.body;
+  console.log(fullCode)
 
   if (!fullCode.html || !fullCode.css || !fullCode.javascript) {
     return res.status(400).send({ message: "Code not found!" });
