@@ -1,43 +1,64 @@
 import { Request, Response } from "express";
 import { Code } from "../models/Code";
+// import { fullCodeType } from "../types/compilerTypes";
+import { AuthRequest } from "../middlewares/verifyToken";
+import { User } from "../models/user";
 import { fullCodeType } from "../types/fullCodeType";
+// import { User } from "../models/User";
 
-export const saveCode = async (req: Request, res: Response) => {
-  const fullCode: fullCodeType = req.body;
-  console.log(fullCode)
+export const saveCode = async (req: AuthRequest, res: Response) => {
+  const { fullCode, title }: { fullCode: fullCodeType; title: string } =
+    req.body;
+  let ownerName = "Anonymous";
+  let user = undefined;
+  let ownerInfo = undefined;
+  let isAuthenticated = false;
 
-  if (!fullCode.html || !fullCode.css || !fullCode.javascript) {
-    return res.status(400).send({ message: "Code not found!" });
+  if (req._id) {
+    user = await User.findById(req._id);
+    if (!user) {
+      return res.status(404).send({ message: "User not found!" });
+    }
+    ownerName = user?.username;
+    ownerInfo = user._id;
+    isAuthenticated = true;
   }
 
+  if (!fullCode.html && !fullCode.css && !fullCode.javascript) {
+    return res.status(400).send({ message: "Code cannot be blank!" });
+  }
   try {
     const newCode = await Code.create({
       fullCode: fullCode,
+      ownerName: ownerName,
+      ownerInfo: ownerInfo,
+      title: title,
     });
-
-    return res.status(201).send({ url: newCode._id, status: "saved !" }); //*got url
+    if (isAuthenticated && user) {
+      user.saveCode.push(newCode._id);
+      await user.save();
+    }
+    return res.status(201).send({ url: newCode._id, status: "saved!" });
   } catch (error) {
-    res.status(500).send({ message: "error saving code", error });
+    return res.status(500).send({ message: "Error saving code", error });
   }
 };
 
-//&load code
-
-export const loadCode = async (req: Request, res: Response) => {
+export const loadCode = async (req: AuthRequest, res: Response) => {
   const { urlId } = req.body;
-  // console.log("url not fount",urlId)//^undefined
-
+  const userId = req._id;
+  let isOwner = false;
   try {
     const existingCode = await Code.findById(urlId);
-    // console.log("existing code not found ",existingCode)//^null
     if (!existingCode) {
       return res.status(404).send({ message: "Code not found" });
     }
-
-    return res.status(200).send({ fullCode: existingCode.fullCode });
+    const user = await User.findById(userId);
+    if (user?.username === existingCode.ownerName) {
+      isOwner = true;
+    }
+    return res.status(200).send({ fullCode: existingCode.fullCode, isOwner });
   } catch (error) {
-    // Handle any errors and return 500 status code
-    console.error("Error loading code:", error);
     return res.status(500).send({ message: "Error loading code", error });
   }
 };

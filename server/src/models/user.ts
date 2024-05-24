@@ -6,7 +6,7 @@ interface UserDetails extends Document {
   password: string;
   picture: string;
   // saveCode: mongoose.Types.ObjectId[];
-  saveCode: Array<{ _id: string }>;
+  saveCode: Array<mongoose.Types.ObjectId>;
 }
 
 const userSchema = new mongoose.Schema<UserDetails>(
@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema<UserDetails>(
     saveCode: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        // ref: 'SaveCode' // Reference to the SaveCode model
+        ref: 'Code' // Reference to the SaveCode model
       },
     ],
   },

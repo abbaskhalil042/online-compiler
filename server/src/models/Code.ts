@@ -21,9 +21,8 @@ const codeSchema = new mongoose.Schema<ICodeSchema>({
   },
 
   title: { type: String, required: true },
-
   ownerInfo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  ownerName: String,
+  ownerName:String,
 });
 
 export const Code = mongoose.model("Code", codeSchema);
