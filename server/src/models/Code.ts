@@ -8,9 +8,9 @@ interface ICodeSchema {
     javascript: string;
   };
 
-  // title:string
-  // ownerInfo: mongoose.Types.ObjectId | string;
-  // ownerName:string
+  title: string;
+  ownerInfo: mongoose.Types.ObjectId | string;
+  ownerName: string;
 }
 
 const codeSchema = new mongoose.Schema<ICodeSchema>({
@@ -20,11 +20,10 @@ const codeSchema = new mongoose.Schema<ICodeSchema>({
     javascript: String,
   },
 
-  // title:{type:String,required:true},
+  title: { type: String, required: true },
 
-  // ownerInfo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-
-  // ownerName:String
+  ownerInfo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  ownerName: String,
 });
 
 export const Code = mongoose.model("Code", codeSchema);
