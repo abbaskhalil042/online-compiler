@@ -33,7 +33,7 @@ config();
 dbConnect();
 
 app.use("/compiler", compilerRouter);
-app.use("/auth", userRouter);
+app.use("/user", userRouter);
 
 app.listen(4000, () => {
   console.log("http://localhost:4000");

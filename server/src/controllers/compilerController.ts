@@ -62,3 +62,24 @@ export const loadCode = async (req: AuthRequest, res: Response) => {
     return res.status(500).send({ message: "Error loading code", error });
   }
 };
+
+//*getMyCodes
+
+export const getMyCodes = async (req: AuthRequest, res: Response) => {
+  const userId = req._id;
+  try {
+
+    const user=await User.findById(userId).populate("saveCode")
+
+    if(!user)
+      {
+        return res.status(404).send({message:"cannot find user!"})
+
+      }
+
+      return res.status(200).send(user.saveCode)
+      
+  } catch (error) {
+    return res.status(500).send({ message: "error loading my codes", error });
+  }
+};
