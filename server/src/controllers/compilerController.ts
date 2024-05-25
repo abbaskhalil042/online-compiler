@@ -69,7 +69,10 @@ export const getMyCodes = async (req: AuthRequest, res: Response) => {
   const userId = req._id;
   try {
 
-    const user=await User.findById(userId).populate("saveCode")
+    const user=await User.findById(userId).populate({
+      path:"saveCode",
+      options:{sort:{createdAt:-1}}
+    })
 
     if(!user)
       {
