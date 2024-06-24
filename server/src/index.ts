@@ -12,14 +12,20 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+// app.use(cors())
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:5173",
+  })
+);
 
 // const corsOptions ={
-//   origin:'*', 
+//   origin:'*',
 //   credentials:true,            //access-control-allow-credentials:true
 //   optionSuccessStatus:200,
 // }
-// app.use(cors(corsOptions)) 
+// app.use(cors(corsOptions))
 
 // app.use(cors({
 //   origin: "http://localhost:5173", // use your actual domain name (or localhost), using * is not recommended
@@ -27,7 +33,6 @@ app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 //   allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
 //   credentials: true
 // }))
-
 
 config();
 dbConnect();

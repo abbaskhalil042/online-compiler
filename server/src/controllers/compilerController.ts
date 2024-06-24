@@ -86,3 +86,34 @@ export const getMyCodes = async (req: AuthRequest, res: Response) => {
     return res.status(500).send({ message: "error loading my codes", error });
   }
 };
+
+
+export const deleteCode=async (req:AuthRequest,res:Response)=>{
+  const userId=req._id
+  const {_id}=req.params
+  try {
+
+    const owner=await User.findById(userId)
+
+    if(!owner){
+      return res.status(404).send({message:"owner not found !"})
+    }
+    
+    return res.status(200).send({_id})
+  } catch (error) {
+
+    return res.status(500).send({message:"error while deleting code !",error})
+    
+  }
+}
+
+
+export const EditCode=async (req:AuthRequest,res:Response)=>{
+  try {
+    
+  } catch (error) {
+
+    return res.status(500).send({message:"Error while editing code !",error})
+    
+  }
+}
